@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Location Share — Cyber Neon (Purple)</title>
+  <meta name="description" content="Share your current location via link, SMS or open in maps. Works on mobile & desktop. Purple cyber neon theme." />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07030a; /* deep */
+      --card:rgba(18,7,28,0.7);
+      --glass: rgba(255,255,255,0.03);
+      --muted:#bfb4d9;
+      --accent1:#b400ff; /* strong purple */
+      --accent2:#d800ff; /* lighter purple */
+      --glow: 0 8px 40px rgba(216,0,255,0.16);
+      --neon: 0 0 18px rgba(216,0,255,0.18), 0 6px 30px rgba(180,0,255,0.08);
+      --success:#00ffa3;
+      --danger:#ff5c7a;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:var(--muted);background:linear-gradient(180deg,var(--bg) 0%, #0a0520 100%);-webkit-font-smoothing:antialiased}
+
+    /* App shell centered like a mobile device */
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .app{
+      width:100%;max-width:460px;border-radius:22px;overflow:hidden;padding:20px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(216,0,255,0.06);box-shadow:0 10px 50px rgba(0,0,0,0.6), var(--glow);
+      backdrop-filter: blur(8px);
+    }
+
+    .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));box-shadow:var(--neon);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+    h1{margin:0;font-size:18px;color:#fff;letter-spacing:0.2px}
+    .sub{font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px}
+
+    .panel{background:var(--card);border-radius:14px;padding:14px;border:1px solid rgba(216,0,255,0.04);box-shadow:0 8px 30px rgba(6,2,12,0.6)}
+    .row{display:flex;gap:8px;align-items:center}
+
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    input[type="text"], input[type="search"], textarea{width:100%;padding:10px 12px;border-radius:10px;background:linear-gradient(180deg,#0d0816 0%, #12061d 100%);border:1px solid rgba(255,255,255,0.03);color:#eee;font-size:14px;outline:none;box-shadow:inset 0 2px 8px rgba(0,0,0,0.6)}
+
+    .controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+    .btn{flex:1;min-width:110px;padding:12px 14px;border-radius:12px;border:2px solid transparent;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px}
+
+    .btn-neon{
+      background:linear-gradient(90deg,var(--accent1),var(--accent2));
+      color:white;border:1px solid rgba(255,255,255,0.06);box-shadow:0 6px 24px rgba(216,0,255,0.12), 0 0 18px rgba(216,0,255,0.14);
+    }
+
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+
+    .btn-share{background:transparent;border:2px solid var(--accent2);color:var(--accent2);box-shadow:0 6px 22px rgba(216,0,255,0.06)}
+
+    .btn-copy{background:transparent;border:2px solid #ff63ff;color:#ff63ff;box-shadow:0 6px 22px rgba(255,99,255,0.06)}
+
+    .small{font-size:13px;padding:8px 10px}
+
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .stat{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);text-align:center}
+    .stat .v{font-size:14px;color:#fff;font-weight:700}
+    .stat .k{font-size:11px;color:var(--muted);margin-top:4px}
+
+    .map{margin-top:12px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
+    iframe{width:100%;height:260px;border:0;display:block}
+
+    .share-row{display:flex;gap:8px;margin-top:10px}
+    .share-row input{flex:1}
+
+    .footer{margin-top:14px;font-size:12px;color:rgba(255,255,255,0.6)}
+
+    /* small screens adjustments */
+    @media (max-width:520px){
+      .app{padding:16px;border-radius:18px}
+      .logo{width:44px;height:44px}
+      iframe{height:220px}
+    }
+
+    /* subtle animated pulse on primary */
+    @keyframes pulseNeon {
+      0%{box-shadow:0 6px 20px rgba(216,0,255,0.06)}
+      50%{box-shadow:0 12px 40px rgba(216,0,255,0.12)}
+      100%{box-shadow:0 6px 20px rgba(216,0,255,0.06)}
+    }
+    .btn-neon.pulse{animation:pulseNeon 2.8s infinite}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="app" role="application">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo">LS</div>
+          <div>
+            <h1>Location Share</h1>
+            <div class="sub">Purple Cyber — app-like responsive UI</div>
+          </div>
+        </div>
+        <div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.6)">Client-only</div>
+      </div>
+
+      <div class="panel" aria-live="polite">
+        <label for="name">Your name (optional)</label>
+        <input id="name" type="text" placeholder="e.g. Asha" />
+
+        <label for="message">Message (optional)</label>
+        <input id="message" type="text" placeholder="e.g. Waiting at main gate" />
+
+        <div class="controls">
+          <button id="btn-get" class="btn btn-neon pulse">Get current location</button>
+          <button id="btn-watch" class="btn btn-ghost small">Start live tracking</button>
+          <button id="btn-stop" class="btn btn-ghost small" style="display:none">Stop tracking</button>
+        </div>
+
+        <div class="info-grid">
+          <div class="stat">
+            <div class="v" id="lat">—</div>
+            <div class="k">Latitude</div>
+          </div>
+          <div class="stat">
+            <div class="v" id="lon">—</div>
+            <div class="k">Longitude</div>
+          </div>
+          <div class="stat">
+            <div class="v" id="acc">—</div>
+            <div class="k">Accuracy</div>
+          </div>
+          <div class="stat">
+            <div class="v" id="time">—</div>
+            <div class="k">Timestamp</div>
+          </div>
+        </div>
+
+        <div class="share-row">
+          <input id="shareUrl" type="text" readonly placeholder="Shareable link will appear here" />
+          <button id="btn-copy" class="btn-copy btn small">Copy</button>
+        </div>
+
+        <div class="controls" style="margin-top:10px">
+          <button id="btn-share" class="btn btn-share">Share / Open Share Dialog</button>
+          <button id="btn-sms" class="btn btn-ghost small">Share via SMS</button>
+          <button id="btn-maps" class="btn btn-ghost small">Open in Google Maps</button>
+        </div>
+
+        <div id="error" style="margin-top:10px;color:var(--danger);font-weight:600;display:block"></div>
+
+        <div class="map" id="mapWrap">
+          <div style="padding:32px;text-align:center;color:rgba(255,255,255,0.12)">Map will appear after you get your location</div>
+        </div>
+
+        <div class="footer">
+          <div>Privacy: this app uses the browser Geolocation API; nothing is sent to a server unless you share a link.</div>
+          <div style="margin-top:6px">Deploy on GitHub Pages (HTTPS) or use <code>http://localhost</code> for local testing.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Functionality preserved exactly as previous single-file app
+  const $ = id => document.getElementById(id);
+  const latEl = $('lat'), lonEl = $('lon'), accEl = $('acc'), timeEl = $('time');
+  const shareEl = $('shareUrl'), errEl = $('error'), mapWrap = $('mapWrap');
+  let watchId = null; let lastPos = null;
+
+  function formatTime(ts){ try{ return new Date(ts).toLocaleString(); }catch(e){return '';}}
+
+  function setPosition(pos){
+    lastPos = pos;
+    const { latitude, longitude, accuracy } = pos.coords;
+    latEl.textContent = latitude.toFixed(6);
+    lonEl.textContent = longitude.toFixed(6);
+    accEl.textContent = (accuracy!=null)? accuracy + ' m' : '—';
+    timeEl.textContent = formatTime(pos.timestamp);
+    errEl.textContent = '';
+    updateShareUrl();
+    renderMap(latitude, longitude);
+  }
+
+  function renderMap(lat, lon){
+    const bboxDelta = 0.01;
+    const left = (lon - bboxDelta), bottom = (lat - bboxDelta), right = (lon + bboxDelta), top = (lat + bboxDelta);
+    const src = `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(left)}%2C${encodeURIComponent(bottom)}%2C${encodeURIComponent(right)}%2C${encodeURIComponent(top)}&layer=mapnik&marker=${encodeURIComponent(lat)}%2C${encodeURIComponent(lon)}`;
+    const existing = mapWrap.querySelector('iframe');
+    if(existing) existing.src = src; else{
+      mapWrap.innerHTML = '';
+      const ifr = document.createElement('iframe'); ifr.src = src; mapWrap.appendChild(ifr);
+    }
+  }
+
+  function updateShareUrl(){
+    if(!lastPos){ shareEl.value = ''; return; }
+    const name = encodeURIComponent($('name').value || '');
+    const msg = encodeURIComponent($('message').value || '');
+    const lat = lastPos.coords.latitude; const lon = lastPos.coords.longitude;
+    const base = location.origin + location.pathname; const params = new URLSearchParams();
+    params.set('lat', lat); params.set('lon', lon); if(name) params.set('name', name); if(msg) params.set('message', msg);
+    shareEl.value = base + '?' + params.toString();
+  }
+
+  $('btn-get').addEventListener('click', ()=>{
+    errEl.textContent = 'Requesting location...';
+    if(!navigator.geolocation){ errEl.textContent = 'Geolocation not supported.'; return; }
+    navigator.geolocation.getCurrentPosition(p => setPosition(p), e=> handleGeolocationError(e), { enableHighAccuracy:true, timeout:15000, maximumAge:10000 });
+  });
+
+  $('btn-watch').addEventListener('click', ()=>{
+    if(!navigator.geolocation){ errEl.textContent = 'Geolocation not supported.'; return; }
+    if(watchId !== null) return;
+    errEl.textContent = 'Starting live tracking...';
+    watchId = navigator.geolocation.watchPosition(p=>{
+      setPosition(p);
+      errEl.style.color=''; errEl.textContent = 'Live tracking active';
+      $('btn-watch').style.display='none'; $('btn-stop').style.display='inline-flex';
+    }, e=> handleGeolocationError(e), { enableHighAccuracy:true, maximumAge:3000, timeout:20000 });
+  });
+
+  $('btn-stop').addEventListener('click', ()=>{
+    if(watchId != null){ navigator.geolocation.clearWatch(watchId); watchId = null; errEl.textContent = 'Tracking stopped'; $('btn-watch').style.display='inline-flex'; $('btn-stop').style.display='none'; }
+  });
+
+  function handleGeolocationError(e){
+    let msg='';
+    if(!e) msg='Unknown error'; else if(e.code===1) msg='Permission denied. Allow location access.'; else if(e.code===2) msg='Position unavailable.'; else if(e.code===3) msg='Timed out.'; else msg=e.message || 'An error occurred.';
+    if(msg.toLowerCase().includes('permissions policy') || (e.message && e.message.toLowerCase().includes('permissions policy'))) msg += ' — ensure page not in iframe without allow="geolocation", or serve over HTTPS.';
+    errEl.style.color = 'var(--danger)'; errEl.textContent = msg;
+  }
+
+  $('btn-share').addEventListener('click', async ()=>{
+    if(!lastPos){ errEl.textContent = 'Get location first.'; return; }
+    updateShareUrl(); const url = shareEl.value;
+    if(navigator.share){ try{ await navigator.share({ title: $('name').value||'My location', text: $('message').value||`I'm at ${lastPos.coords.latitude.toFixed(6)}, ${lastPos.coords.longitude.toFixed(6)}`, url }); errEl.style.color='var(--success)'; errEl.textContent='Share dialog opened.'; return;}catch(e){}}
+    try{ await navigator.clipboard.writeText(url); errEl.style.color='var(--success)'; errEl.textContent='Link copied to clipboard.';}catch(err){ shareEl.select(); try{ document.execCommand('copy'); errEl.style.color='var(--success)'; errEl.textContent='Link copied to clipboard.';}catch(e){ errEl.style.color='var(--danger)'; errEl.textContent='Could not copy. Please copy manually.'; }}
+  });
+
+  $('btn-copy').addEventListener('click', async ()=>{
+    const url = shareEl.value; if(!url){ errEl.textContent='Nothing to copy.'; return; }
+    try{ await navigator.clipboard.writeText(url); errEl.style.color='var(--success)'; errEl.textContent='Link copied.';}catch(err){ shareEl.select(); try{ document.execCommand('copy'); errEl.style.color='var(--success)'; errEl.textContent='Link copied.';}catch(e){ errEl.style.color='var(--danger)'; errEl.textContent='Could not copy.'; }}
+  });
+
+  $('btn-sms').addEventListener('click', ()=>{
+    if(!lastPos){ errEl.textContent='Get a location first.'; return; }
+    updateShareUrl(); const body = encodeURIComponent(`My location: ${lastPos.coords.latitude.toFixed(6)}, ${lastPos.coords.longitude.toFixed(6)}
+${shareEl.value}`);
+    const smsUrl = (navigator.userAgent.match(/iPhone|iPad|iPod/i)) ? `sms:&body=${body}` : `sms:?body=${body}`;
+    window.location.href = smsUrl;
+  });
+
+  $('btn-maps').addEventListener('click', ()=>{
+    if(!lastPos){ errEl.textContent='Get a location first.'; return; }
+    const lat = lastPos.coords.latitude, lon = lastPos.coords.longitude; const maps = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`; window.open(maps,'_blank');
+  });
+
+  function loadFromQuery(){
+    const qs = new URLSearchParams(location.search); const lat = qs.get('lat'), lon = qs.get('lon'), name = qs.get('name'), message = qs.get('message');
+    if(lat && lon){ const coords = { coords:{latitude:parseFloat(lat),longitude:parseFloat(lon),accuracy:null}, timestamp:Date.now() }; $('name').value = name || ''; $('message').value = message || ''; setPosition(coords); errEl.style.color='var(--success)'; errEl.textContent='Shown location from link.'; }
+  }
+  loadFromQuery();
+
+  ['name','message'].forEach(id => $(id).addEventListener('input', ()=> updateShareUrl()));
+
+  if(navigator.permissions){ try{ navigator.permissions.query({name:'geolocation'}).then(p=>{ if(p.state==='denied'){ errEl.style.color='var(--danger)'; errEl.textContent='Location permission is denied for this origin. Check browser settings.';} p.onchange=()=>{ if(p.state==='granted'){ errEl.style.color='var(--success)'; errEl.textContent='Location permission granted.';} if(p.state==='denied'){ errEl.style.color='var(--danger)'; errEl.textContent='Location permission denied.';} }; }); }catch(e){}
+  }
+  if(location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1'){
+    errEl.style.color='var(--danger)'; errEl.textContent='Page is not served over HTTPS — Geolocation may be blocked. Use GitHub Pages (HTTPS) or localhost.';
+  }
+</script>
+  <!-- Camera Capture Section (Position: Below Location Panel) -->
+<div id="cameraSection" style="margin-top:20px; text-align:center; display:none;">
+  <video id="cameraPreview" autoplay playsinline style="width:90%; max-width:350px; border-radius:12px; box-shadow:0 0 15px rgba(0,0,0,0.4);"></video>
+
+  <canvas id="photoCanvas" style="display:none;"></canvas>
+
+  <div style="margin-top:12px;">
+    <button id="captureBtn" onclick="captureLivePhoto()" class="action-btn">Capture Photo</button>
+    <button onclick="closeCamera()" class="action-btn" style="background:#ff0055;">Close</button>
+  </div>
+
+  <div id="photoOutput" style="margin-top:15px;"></div>
+</div>
+
+<!-- Hidden button the floating camera button triggers -->
+<button id="startCameraBtn" style="display:none;" onclick="openCamera()"></button>
+
+<script>
+  let cameraStream;
+
+  function openCamera() {
+    const cameraSection = document.getElementById('cameraSection');
+    const video = document.getElementById('cameraPreview');
+
+    cameraSection.style.display = 'block';
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+      .then(stream => {
+        cameraStream = stream;
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        alert('Camera access blocked. Please enable camera permissions.');
+      });
+  }
+
+  function captureLivePhoto() {
+    const video = document.getElementById('cameraPreview');
+    const canvas = document.getElementById('photoCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    ctx.drawImage(video, 0, 0);
+
+    // Add a watermark
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.fillRect(canvas.width - 260, canvas.height - 40, 250, 35);
+
+    ctx.fillStyle = '#ff2eff';
+    ctx.font = '20px Arial';
+    ctx.fillText('LIVE · NOT FROM GALLERY', canvas.width - 250, canvas.height - 15);
+
+    const photoURL = canvas.toDataURL('image/jpeg');
+
+    document.getElementById('photoOutput').innerHTML = `<img src="${photoURL}" style="width:90%; max-width:350px; margin-top:10px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.5);">`;
+  }
+
+  function closeCamera() {
+    const cameraSection = document.getElementById('cameraSection');
+    cameraSection.style.display = 'none';
+
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(t => t.stop());
+    }
+  }
+</script>
+
+<!-- Floating Camera Action Button -->
+  <button id="floatingCameraBtn" onclick="startCameraFromFloating()" class="floating-btn">📸</button>
+
+  <style>
+    .floating-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(180, 0, 255, 0.9);
+      padding: 18px 22px;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(180,0,255,0.8);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(255,255,255,0.2);
+      transition: 0.3s;
+      z-index: 9999;
+    }
+    .floating-btn:hover {
+      transform: scale(1.12);
+      box-shadow: 0 0 30px rgba(180,0,255,1);
+    }
+
+    .watermark {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.6);
+      padding: 6px 10px;
+      border-radius: 6px;
+      color: #ff2eff;
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+  </style>
+
+  <script>
+    function startCameraFromFloating() {
+      const btn = document.getElementById('startCameraBtn');
+      if (btn) btn.click();
+    }
+
+    // Add watermark after capturing photo
+    const oldTakePhoto = window.takePhoto;
+    window.takePhoto = function() {
+      oldTakePhoto();
+      setTimeout(() => {
+        const img = document.getElementById('capturedPhoto');
+        if (!img) return;
+        const watermark = document.createElement('div');
+        watermark.className = 'watermark';
+        watermark.innerText = 'LIVE · NOT FROM GALLERY';
+        img.parentElement.style.position = 'relative';
+        img.parentElement.appendChild(watermark);
+      }, 300);
+    }
+  </script>
+
+</body>
+</html>
